@@ -1,6 +1,4 @@
 from setuptools import setup
-import os
-from glob import glob
 
 package_name = 'pkg_mother'
 
@@ -12,7 +10,6 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share',package_name),glob('launch/*launch.[pxy][yma]*'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -23,7 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'move_rnd = pkg_mother.move_randomly:main'
         ],
     },
 )
