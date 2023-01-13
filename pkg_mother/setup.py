@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'move_rnd = pkg_mother.cmove_randomly:main'
+            'move_rnd = pkg_mother.move_randomly:main'
         ],
     },
 )
