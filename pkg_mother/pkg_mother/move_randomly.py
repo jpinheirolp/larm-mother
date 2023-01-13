@@ -94,10 +94,10 @@ class Move_Randomly(Node):
             velo.angular.z = 0.0
         elif self.command == "turn_right":
             velo.linear.x = 0.0
-            velo.angular.z = 0.5
+            velo.angular.z = 0.3 + random()*0.1
         elif self.command == "turn_left":
             velo.linear.x = 0.0
-            velo.angular.z = -0.5
+            velo.angular.z = -0.3 - random()*0.1
         else:
             return 0
         print(velo)
