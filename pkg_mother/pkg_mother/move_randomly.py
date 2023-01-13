@@ -79,16 +79,19 @@ class Move_Randomly(Node):
         print(self.command)
         self.time_to_rnd_turn -= 1
         if self.command == "turn_to_rnd_position" and not self.mutex_trn_rnd:
+            print("I should turn")
             self.mutex_trn_rnd = True
             self.rotation_counter = round(random() * 2 * math.pi * 10) # determines a random angular position
             self.time_to_rnd_turn = self.time_interval_rnd_turn
         if self.mutex_trn_rnd: #if the robot is turning the other movements stop
+            print("Im turning")
             if self.rotation_counter <= 0:
                 self.rotation_counter = 0
                 self.mutex_trn_rnd = False
                 return 0
             self.rotation_counter -= 1
             velo.angular.z = 0.1
+            velo.angular.x = 0.0
         elif self.command == "go_foward": #would be more optmized with a switch :(
             velo.linear.x = 0.1
             velo.angular.z = 0.0
@@ -100,7 +103,7 @@ class Move_Randomly(Node):
             velo.angular.z = -0.3 - random()*0.1
         else:
             return 0
-        print(velo)
+        #print(velo)
         self.velocity_publisher.publish(velo)
 
     #def turn_to_rnd_position(self):
