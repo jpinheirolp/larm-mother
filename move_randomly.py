@@ -20,12 +20,12 @@ class Move_Randomly(Node):
 
         self.velocity_publisher= self.create_publisher(Twist, '/multi/cmd_nav', 10)
         self.timer = self.create_timer(0.1, self.move_robot) # 0.1 seconds to target a frequency of 10 hertz
-        self.rectangle_closer_y_limit = 0.1
-        self.rectangle_further_away_y_limit = 0.5
-        self.rectangle_left_x_limit = -0.3
-        self.rectangle_right_x_limit = 0.3
-        self.rectangle_low_z_limit = -0.15
-        self.rectangle_high_z_limit = 0.2
+        self.rectangle_closer_y_limit = -0.3
+        self.rectangle_further_away_y_limit = 0.3
+        self.rectangle_left_x_limit = 0
+        self.rectangle_right_x_limit = 0.23
+        self.rectangle_low_z_limit = -0.18
+        self.rectangle_high_z_limit = 0.4
         self.rectangle_center_x_direction = 0
         self.command = "no commmand"
         self.time_to_rnd_turn = 0
@@ -55,7 +55,7 @@ class Move_Randomly(Node):
                     if self.rectangle_low_z_limit < point_z_coordinate and point_z_coordinate < self.rectangle_high_z_limit:
 
                         #point is inside rectangle
-                        if point_x_coordinate < self.rectangle_center_x_direction:
+                        if point_y_coordinate < self.rectangle_center_x_direction:
                             num_points_left += 1
                         else: 
                             num_points_right += 1
