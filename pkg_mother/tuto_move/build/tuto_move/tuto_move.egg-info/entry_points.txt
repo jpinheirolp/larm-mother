@@ -1,5 +1,0 @@
-[console_scripts]
-move_1m = tuto_move.move_1m:main
-safemove = tuto_move.safemove:main
-scan_echo = tuto_move.scan_echo:main
-
