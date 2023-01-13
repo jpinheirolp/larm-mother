@@ -28,8 +28,8 @@ class Move_Randomly(Node):
         self.rectangle_high_z_limit = 0.4
         self.rectangle_center_x_direction = 0
         self.command = "no commmand"
-        self.time_to_rnd_turn = 0
         self.time_interval_rnd_turn = 300 # 0.1s * 300 == 30 seconds
+        self.time_to_rnd_turn = 300
         self.robot_angle = 0
         self.robot_position_x = 0
         self.robot_position_y = 0
@@ -41,7 +41,7 @@ class Move_Randomly(Node):
 
     def interpret_obstacles(self,scanMsg):
         print("interpreting ...")
-        self.time_to_rnd_turn = (self.time_interval_rnd_turn + 1) % self.time_interval_rnd_turn
+        
         obstacles_points = scanMsg.points
         num_points_left = 0
         num_points_right = 0
@@ -60,7 +60,7 @@ class Move_Randomly(Node):
                         else: 
                             num_points_right += 1
         #It`s not gonna work but the idea is good
-        if self.time_interval_rnd_turn == 0:
+        if self.time_to_rnd_turn == 0:
             self.command = "turn_to_rnd_position"
             return 0
         if num_points_left + num_points_right <= tol_of_points_inside_rect:
@@ -77,13 +77,17 @@ class Move_Randomly(Node):
     def move_robot(self):
         velo = Twist()
         print(self.command)
+        self.time_to_rnd_turn -= 1
         if self.command == "turn_to_rnd_position" and not self.mutex_trn_rnd:
             self.mutex_trn_rnd = True
             self.rotation_counter = round(random() * 2 * math.pi * 10) # determines a random angular position
+            self.time_to_rnd_turn = self.time_interval_rnd_turn
         if self.mutex_trn_rnd: #if the robot is turning the other movements stop
-            if self.rotation_counter == 0:
+            if self.rotation_counter <= 0:
+                self.rotation_counter = 0
                 self.mutex_trn_rnd = False
                 return 0
+            self.rotation_counter -= 1
             velo.angular.z = 0.1
         elif self.command == "go_foward": #would be more optmized with a switch :(
             velo.linear.x = 0.1
@@ -99,14 +103,11 @@ class Move_Randomly(Node):
         print(velo)
         self.velocity_publisher.publish(velo)
 
-    def turn_to_rnd_position(self):
-        if self.rotation_counter == 0:
-            self.mutex_trn_rnd = False
-            return 0
-        return 
+    #def turn_to_rnd_position(self):
+   
 
         
-        pass
+      
 
     
                     
