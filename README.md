@@ -13,7 +13,7 @@ Pour cela nous avons 3 fichier launch:
   - ouvrir le terminal 
   - copier et coller la commande "ros2 launch pkg_mother challenge-1_sim.launch.py"
 
-# Comment lancer le challenge-1 avec le robot
+# Comment exécuter le challenge-1 sur le robot réel
 
   - ouvrir le terminal 
   - copier et coller la commande "ros2 launch pkg_mother challenge-1_visualize.launch.py"
