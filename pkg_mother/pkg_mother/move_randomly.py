@@ -62,7 +62,7 @@ class Move_Randomly(Node):
                             num_points_left += 1
                             # uodating angular speed
                             left_rect_center = (self.rectangle_left_y_limit - self.rectangle_center_y_direction)/2
-                            sum_for_robot_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / right_rect_center
+                            sum_for_robot_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / left_rect_center
                         else: 
                             num_points_right += 1
                             right_rect_center = (self.rectangle_right_y_limit - self.rectangle_center_y_direction)/2
