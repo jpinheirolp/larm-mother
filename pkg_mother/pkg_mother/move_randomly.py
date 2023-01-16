@@ -32,7 +32,7 @@ class Move_Randomly(Node):
         self.time_interval_rnd_turn = 1000 # 0.1s * 300 == 30 seconds
         self.time_to_rnd_turn = 1000
 
-        self.robot_max_angular_speed = 3
+        self.robot_max_angular_speed = 0.5
         self.robot_right_angular_speed = 0
         self.robot_left_angular_speed = 0
 
