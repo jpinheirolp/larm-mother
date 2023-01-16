@@ -32,12 +32,18 @@ class Move_Randomly(Node):
         self.time_interval_rnd_turn = 150 # 0.1s * 300 == 30 seconds
         self.time_to_rnd_turn = 150
 
+
         self.robot_max_angular_speed = 1.5
         self.robot_min_angular_speed = 0.5
         self.robot_right_angular_speed = 0
         self.robot_left_angular_speed = 0
 
         self.robot_linear_speed = 0.1
+
+        self.robot_close_linear_speed = 0.2
+        self.robot_middle_linear_speed = 0.6
+        self.robot_far_linear_speed = 1.0
+        
 
         self.mutex_trn_rnd = False
         self.rotation_counter = 0
@@ -50,6 +56,10 @@ class Move_Randomly(Node):
         obstacles_points = scanMsg.points
         num_points_left = 0
         num_points_right = 0
+        num_points_close = 0
+        num_points_middle = 0
+        num_points_far = 0
+
         tol_of_points_inside_rect = 60
         sum_for_robot_left_angular_speed = 0
         sum_for_robot_right_angular_speed = 0
@@ -64,7 +74,6 @@ class Move_Randomly(Node):
             if self.rectangle_left_y_limit < point_y_coordinate and point_y_coordinate < self.rectangle_right_y_limit:
                 if self.rectangle_closer_x_limit < point_x_coordinate and point_x_coordinate < self.rectangle_further_away_x_limit:
                     if self.rectangle_low_z_limit < point_z_coordinate and point_z_coordinate < self.rectangle_high_z_limit:
-
                         #point is inside rectangle
                         if point_y_coordinate < self.rectangle_center_y_direction:
                             num_points_left += 1
@@ -75,6 +84,14 @@ class Move_Randomly(Node):
                             num_points_right += 1
                             sum_for_robot_right_angular_speed += ( (self.rectangle_right_y_limit - (point_y_coordinate - self.rectangle_center_y_direction)) * (self.robot_max_angular_speed*0.7-self.robot_min_angular_speed)) / right_rect_center
 
+                        if point_x_coordinate < 30:
+                            num_points_close += 1
+                        elif point_x_coordinate < 60:
+                            num_points_middle += 1
+                        else:
+                            num_points_far += 1
+
+
         #It`s not gonna work but the idea is good
         #print("points in left",num_points_left)
         #print("points in right", num_points_right)
@@ -83,7 +100,15 @@ class Move_Randomly(Node):
             return 0
         if num_points_left + num_points_right <= tol_of_points_inside_rect:
             #there is no object in front of the robot
+            if max(num_points_close, num_points_middle, num_points_far) == num_points_close:
+                self.robot_linear_speed = self.robot_close_linear_speed
+            elif num_points_middle >= num_points_far:
+                self.robot_linear_speed = self.robot_middle_linear_speed
+            else:
+                self.robot_linear_speed = self.robot_far_linear_speed
+
             self.command = "go_foward"
+
         else:
             if num_points_left < num_points_right:
                 #there is a object on the left
@@ -158,4 +183,5 @@ if __name__ == '__main__' :
 #'''
        
       
+
 
