@@ -11,11 +11,12 @@ Vous serez également en capacité de visualiser ce que le robot observe gràce 
 
 ## Comment installer le repertoire
 
-- Installer ros2 et Python 3 ainsi que ses nombreuses bibliothèques presentes dans le fichier package.xml
-- Créer un workspace
+- Installer ros2 et Python 3 
+- Créer un workspace (repertoire)
 - Ouvrir le shell
 - Rentrer dans votre workspace
-- insérer la commande ` git clone https://github.com/jpinheirolp/larm-mother.git `
+- cloner et installer tbot `https://bitbucket.org/imt-mobisyst/mb6-tbot` 
+- insérer la commande `git clone https://github.com/jpinheirolp/larm-mother.git`
 
 ## Attention 
 
