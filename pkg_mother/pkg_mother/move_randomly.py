@@ -23,16 +23,17 @@ class Move_Randomly(Node):
         self.rectangle_left_y_limit = -0.3
         self.rectangle_right_y_limit = 0.3
         self.rectangle_closer_x_limit = 0
-        self.rectangle_further_away_x_limit = 0.23
+        self.rectangle_further_away_x_limit = 0.4
         self.rectangle_low_z_limit = -0.18
         self.rectangle_high_z_limit = 0.4
         self.rectangle_center_y_direction = 0
 
         self.command = "no commmand"
-        self.time_interval_rnd_turn = 1000 # 0.1s * 300 == 30 seconds
-        self.time_to_rnd_turn = 1000
+        self.time_interval_rnd_turn = 150 # 0.1s * 300 == 30 seconds
+        self.time_to_rnd_turn = 150
 
-        self.robot_max_angular_speed = 0.5
+        self.robot_max_angular_speed = 1.5
+        self.robot_min_angular_speed = 0.5
         self.robot_right_angular_speed = 0
         self.robot_left_angular_speed = 0
 
@@ -49,13 +50,17 @@ class Move_Randomly(Node):
         obstacles_points = scanMsg.points
         num_points_left = 0
         num_points_right = 0
-        tol_of_points_inside_rect = 30
+        tol_of_points_inside_rect = 60
         sum_for_robot_left_angular_speed = 0
         sum_for_robot_right_angular_speed = 0
         for point in obstacles_points:
             point_x_coordinate = point.x
             point_y_coordinate = point.y
             point_z_coordinate = point.z
+
+            left_rect_center = (self.rectangle_left_y_limit - self.rectangle_center_y_direction)/2
+            right_rect_center = (self.rectangle_right_y_limit - self.rectangle_center_y_direction)/2
+
             if self.rectangle_left_y_limit < point_y_coordinate and point_y_coordinate < self.rectangle_right_y_limit:
                 if self.rectangle_closer_x_limit < point_x_coordinate and point_x_coordinate < self.rectangle_further_away_x_limit:
                     if self.rectangle_low_z_limit < point_z_coordinate and point_z_coordinate < self.rectangle_high_z_limit:
@@ -64,35 +69,37 @@ class Move_Randomly(Node):
                         if point_y_coordinate < self.rectangle_center_y_direction:
                             num_points_left += 1
                             # uodating angular speed
-                            left_rect_center = (self.rectangle_left_y_limit - self.rectangle_center_y_direction)/2
-                            sum_for_robot_left_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / left_rect_center
+                            sum_for_robot_left_angular_speed += ( (self.rectangle_left_y_limit - (point_y_coordinate - self.rectangle_center_y_direction) ) * (self.robot_max_angular_speed*0.7-self.robot_min_angular_speed)) / left_rect_center
+                    
                         else: 
                             num_points_right += 1
-                            right_rect_center = (self.rectangle_right_y_limit - self.rectangle_center_y_direction)/2
-                            sum_for_robot_right_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / right_rect_center
+                            sum_for_robot_right_angular_speed += ( (self.rectangle_right_y_limit - (point_y_coordinate - self.rectangle_center_y_direction)) * (self.robot_max_angular_speed*0.7-self.robot_min_angular_speed)) / right_rect_center
 
         #It`s not gonna work but the idea is good
-        if self.time_to_rnd_turn == 0:
+        #print("points in left",num_points_left)
+        #print("points in right", num_points_right)
+        if self.time_to_rnd_turn <= 0:
             self.command = "turn_to_rnd_position"
             return 0
         if num_points_left + num_points_right <= tol_of_points_inside_rect:
             #there is no object in front of the robot
             self.command = "go_foward"
         else:
-            if num_points_left > num_points_right:
+            if num_points_left < num_points_right:
                 #there is a object on the left
                 self.command = "turn_left"
-                self.robot_left_angular_speed = abs(sum_for_robot_left_angular_speed/(num_points_left + 1))
+                self.robot_left_angular_speed = abs(sum_for_robot_right_angular_speed/(num_points_right + 1)) + self.robot_min_angular_speed
             else:
                 #there is a object on the right
                 self.command = "turn_right"
-                self.robot_right_angular_speed = sum_for_robot_right_angular_speed/(num_points_right + 1)
+                self.robot_right_angular_speed = sum_for_robot_left_angular_speed/(num_points_left + 1) + self.robot_min_angular_speed
                 
 
     def move_robot(self):
         velo = Twist()
-        print(self.command)
+        #print(self.command)
         self.time_to_rnd_turn -= 1
+        #print(self.time_to_rnd_turn,"time to turn")
         if self.command == "turn_to_rnd_position" and not self.mutex_trn_rnd:
             print("I should turn")
             self.mutex_trn_rnd = True
@@ -105,17 +112,20 @@ class Move_Randomly(Node):
                 self.mutex_trn_rnd = False
                 return 0
             self.rotation_counter -= 1
-            velo.angular.z = 0.1
+            velo.angular.z = 0.5
             velo.angular.x = 0.0
         elif self.command == "go_foward": #would be more optmized with a switch :(
             velo.linear.x = self.robot_linear_speed
             velo.angular.z = 0.0
         elif self.command == "turn_right":
             velo.linear.x = 0.0
-            velo.angular.z = self.robot_right_angular_speed
+            velo.angular.z = min(self.robot_right_angular_speed,self.robot_max_angular_speed)
+            print("right turn", self.robot_right_angular_speed )
+
         elif self.command == "turn_left":
             velo.linear.x = 0.0
-            velo.angular.z = -self.robot_left_angular_speed
+            print("left turn", self.robot_left_angular_speed )
+            velo.angular.z = -min(self.robot_left_angular_speed,self.robot_max_angular_speed)
         else:
             return 0
         #print(velo)
