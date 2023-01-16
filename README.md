@@ -17,6 +17,10 @@ Vous serez également en capacité de visualiser ce que le robot observe gràce 
 - Rentrer dans votre workspace
 - insérer la commande ` git clone https://github.com/jpinheirolp/larm-mother.git `
 
+# Attention 
+
+Il est bon à noter qu'avant de lancer chaque commande ROS, il faut revenir dans votre répertoire ros2 et lancer la commande ` colcon build ` dans votre shell, puis `source install/setup.bash `
+
 ## Challenge 1
 
 L'objectif de ce challenge 1 est de faire en sorte que le robot puisse se déplacer dans un espace contenant des obstacles sans avoir de collision. 
