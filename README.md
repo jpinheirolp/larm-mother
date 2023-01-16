@@ -15,7 +15,7 @@ Le robot fonctionne sous ROS2: https://docs.ros.org/en/foxy/Tutorials/Intermedia
 - Créer un workspace
 - Ouvrir le shell
 - Rentrer dans votre workspace
-- insérer la commande 'git clone https://github.com/jpinheirolp/larm-mother.git'
+- insérer la commande ` git clone https://github.com/jpinheirolp/larm-mother.git `
 
 ## Challenge 1
 
@@ -28,14 +28,14 @@ Pour cela nous avons 3 fichier launch:
 # Comment exécuter la simulation du challenge-1
 
   - ouvrir le shell 
-  - copier et coller la commande 'ros2 launch pkg_mother challenge-1_sim.launch.py'
+  - copier et coller la commande ` ros2 launch pkg_mother challenge-1_sim.launch.py `
 
 # Comment exécuter le challenge-1 sur le robot réel
 
   - ouvrir le terminal 
-  - copier et coller la commande 'ros2 launch pkg_mother challenge-1_robot.launch.py'
+  - copier et coller la commande  ` ros2 launch pkg_mother challenge-1_robot.launch.py `
   
 # Comment exécuter la visualisation
 
   - ouvrir le terminal 
-  - copier et coller la commande 'ros2 launch pkg_mother challenge-1_visualize.launch.py'
+  - copier et coller la commande ` ros2 launch pkg_mother challenge-1_visualize.launch.py `
