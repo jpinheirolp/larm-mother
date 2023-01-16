@@ -37,7 +37,6 @@ class ScanInterpret(Node):
                 obstacles.append( aPoint )
             angle+= scanMsg.angle_increment
             sample= [ [ round(p[0], 2), round(p[1], 2) ] for p in  sample[10:20] ]
-            self.get_logger().info( f" obs({len(obstacles)}) ...{sample}..." ) 
             nuage=PointCloud()
             nuage.header.frame_id='laser'
             nuage.points=obstacles
@@ -58,7 +57,6 @@ class ScanInterpret(Node):
 
         
 def main(args=None):
-    print('Its running')
     rclpy.init(args=args)
     scanInterpret = ScanInterpret()
     rclpy.spin(scanInterpret)
