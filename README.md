@@ -6,8 +6,8 @@ Ce git est issu d'un projet de cours de Logiciels et applications pour la roboti
 Le repertoire Larm_mother permet de au robot Kobuki de se déplacer dans une pièce. Grâce aux différents fichiers, vous pourrez executer un déplacement autonome du robot, scaner d'une pièce, établir une carte d'une pièce et reconnaître divers objets dans son environnement. 
 Vous serez également en capacité de visualiser ce que le robot observe gràce à Rviz2, et d'observer des simulations de robot grâce à Gazebo. 
 
-L'ensemble des scripts sont écrits en Python: https://www.python.org/
-Le robot fonctionne sous ROS2: https://docs.ros.org/en/foxy/Tutorials/Intermediate/Launch/Launch-Main.html
+- L'ensemble des scripts sont écrits en Python: https://www.python.org/
+- Le robot fonctionne sous ROS2: https://docs.ros.org/en/foxy/Tutorials/Intermediate/Launch/Launch-Main.html
 
 ## Comment installer le repertoire
 
