@@ -33,7 +33,9 @@ class Move_Randomly(Node):
         self.time_to_rnd_turn = 300
 
         self.robot_max_angular_speed = 3
-        self.robot_angular_speed = 0
+        self.robot_right_angular_speed = 0
+        self.robot_left_angular_speed = 0
+
         self.robot_linear_speed = 0.1
 
         self.mutex_trn_rnd = False
@@ -48,7 +50,8 @@ class Move_Randomly(Node):
         num_points_left = 0
         num_points_right = 0
         tol_of_points_inside_rect = 30
-        sum_for_robot_angular_speed = 0
+        sum_for_robot_left_angular_speed = 0
+        sum_for_robot_right_angular_speed = 0
         for point in obstacles_points:
             point_x_coordinate = point.x
             point_y_coordinate = point.y
@@ -62,11 +65,11 @@ class Move_Randomly(Node):
                             num_points_left += 1
                             # uodating angular speed
                             left_rect_center = (self.rectangle_left_y_limit - self.rectangle_center_y_direction)/2
-                            sum_for_robot_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / left_rect_center
+                            sum_for_robot_left_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / left_rect_center
                         else: 
                             num_points_right += 1
                             right_rect_center = (self.rectangle_right_y_limit - self.rectangle_center_y_direction)/2
-                            sum_for_robot_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / right_rect_center
+                            sum_for_robot_right_angular_speed += ((point_y_coordinate - self.rectangle_center_y_direction) * self.robot_max_angular_speed) / right_rect_center
 
         #It`s not gonna work but the idea is good
         if self.time_to_rnd_turn == 0:
@@ -79,11 +82,11 @@ class Move_Randomly(Node):
             if num_points_left < num_points_right:
                 #there is a object on the right
                 self.command = "turn_left"
-                self.robot_angular_speed = abs(sum_for_robot_angular_speed/num_points_left)
+                self.robot_right_angular_speed = abs(sum_for_robot_right_angular_speed/(num_points_left + 1))
             else:
                 #there is a object on the left
                 self.command = "turn_right"
-                self.robot_angular_speed = sum_for_robot_angular_speed/num_points_right
+                self.robot_left_angular_speed = sum_for_robot_left_angular_speed/(num_points_right + 1)
                 
 
     def move_robot(self):
@@ -109,10 +112,10 @@ class Move_Randomly(Node):
             velo.angular.z = 0.0
         elif self.command == "turn_right":
             velo.linear.x = 0.0
-            velo.angular.z = self.robot_angular_speed
+            velo.angular.z = self.robot_right_angular_speed
         elif self.command == "turn_left":
             velo.linear.x = 0.0
-            velo.angular.z = -self.robot_angular_speed
+            velo.angular.z = -self.robot_left_angular_speed
         else:
             return 0
         #print(velo)
