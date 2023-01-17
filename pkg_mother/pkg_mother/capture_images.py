@@ -22,6 +22,7 @@ class CameraInterpret(Node):
         self.image_counter += 1
         captured_image = scanMsg.data
         print(captured_image) 
+        captured_image = np.array(captured_image)
         cv2.imwrite(f'image_{self.image_counter}', captured_image)
 
 def main(args=None):
