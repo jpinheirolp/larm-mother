@@ -10,20 +10,21 @@ import os
 #from sklearn import preprocessing
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-
-
+image_path = '/home/bot/ros2_ws/larm-mother/pkg_mother/photos' 
+os.chdir(image_path)
 class CameraInterpret(Node):
     def __init__(self):
         super().__init__('scan_interpreter')
         self.create_subscription( Image, 'img', self.scan_callback, 10)
         self.image_counter = 0
         self.bridge = CvBridge()
-
+       
+        
     def scan_callback(self, scanMsg):
-        print("capturing image")
+        #print("capturing image")
         self.image_counter += 1
         captured_image = scanMsg
-        print(captured_image) 
+        #print(captured_image) 
         cv_captured_image = self.bridge.imgmsg_to_cv2(captured_image, "bgr8")
         cv2.imwrite(f'image_{self.image_counter}.jpg', cv_captured_image)
 
