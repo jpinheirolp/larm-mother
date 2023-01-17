@@ -23,8 +23,6 @@ def generate_launch_description():
             package='pkg_mother',
             executable='mv_rand',
             name="mv_rand",
-            remappings=[
-                ("/multi/cmd_nav", "/cmd_vel")
-            ]),
+            ),
             ])
          

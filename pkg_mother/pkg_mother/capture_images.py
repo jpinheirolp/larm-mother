@@ -22,10 +22,10 @@ class CameraInterpret(Node):
     def scan_callback(self, scanMsg):
         print("capturing image")
         self.image_counter += 1
-        captured_image = scanMsg.data
+        captured_image = scanMsg
         print(captured_image) 
         cv_captured_image = self.bridge.imgmsg_to_cv2(captured_image, "bgr8")
-        cv2.imwrite(f'image_{self.image_counter}', cv_captured_image)
+        cv2.imwrite(f'image_{self.image_counter}.jpg', cv_captured_image)
 
 def main(args=None):
     rclpy.init(args=args)
