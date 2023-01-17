@@ -4,11 +4,12 @@ from rclpy.node import Node
 import cv2
 import numpy as np
 import os
-from sklearn.svm import LinearSVC
-from scipy.cluster.vq import *
-from sklearn.preprocessing import StandardScaler
-from sklearn import preprocessing
+#from sklearn.svm import LinearSVC
+#from scipy.cluster.vq import *
+#from sklearn.preprocessing import StandardScaler
+#from sklearn import preprocessing
 from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
 
 class CameraInterpret(Node):
@@ -16,14 +17,15 @@ class CameraInterpret(Node):
         super().__init__('scan_interpreter')
         self.create_subscription( Image, 'img', self.scan_callback, 10)
         self.image_counter = 0
+        self.bridge = CvBridge()
 
     def scan_callback(self, scanMsg):
         print("capturing image")
         self.image_counter += 1
         captured_image = scanMsg.data
         print(captured_image) 
-        captured_image = np.array(captured_image)
-        cv2.imwrite(f'image_{self.image_counter}', captured_image)
+        cv_captured_image = self.bridge.imgmsg_to_cv2(captured_image, "bgr8")
+        cv2.imwrite(f'image_{self.image_counter}', cv_captured_image)
 
 def main(args=None):
     rclpy.init(args=args)
