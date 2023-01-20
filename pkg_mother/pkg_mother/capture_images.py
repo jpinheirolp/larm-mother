@@ -10,7 +10,7 @@ import os
 #from sklearn import preprocessing
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-image_path = '/home/bot/ros2_ws/larm-mother/pkg_mother/photos' 
+image_path = '/home/bot/Images' 
 os.chdir(image_path)
 class CameraInterpret(Node):
     def __init__(self):

@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from tools import histo, myplot
+from tools import *
 
-im1=cv2.imread("image1.jpg",0)
-im2=cv2.imread("image2.jpg",0)
+im1=cv2.imread("image_501.jpg",0)
+im2=cv2.imread("image_886.jpg",0)
 im1 = cv2.resize(im1, (600,800)) 
 im2 = cv2.resize(im2, (600,800))
 
