@@ -32,7 +32,7 @@ Pour cela nous avons 3 fichier launch:
 
 ## Comment exécuter la simulation du challenge-1
 
-  - ouvrir le shell 
+  - ouvrir le terminal
   - copier et coller la commande ` ros2 launch pkg_mother challenge-1_sim.launch.py `
 
 ## Comment exécuter le challenge-1 sur le robot réel
@@ -44,3 +44,19 @@ Pour cela nous avons 3 fichier launch:
 
   - ouvrir le terminal 
   - copier et coller la commande ` ros2 launch pkg_mother challenge-1_visualize.launch.py `
+
+# Challenge 2
+
+L'objectif de ce challenge est de faire en sorte que le robot puisse faire une carte de la pièce dans laquelle le robot se déplace. Il sera de plus capable de repérer deux types de bouteilles :  Une bouteille orange et une bouteille noire Nuka-cola. A chaque fois que le robot détecte une bouteille, il affiche un message de détection.
+
+## Comment exécuter la simulation du challenge-2
+
+  - ouvrir le terminal 
+  - copier et coller la commande ` ros2 launch pkg_mother challenge-2_sim.launch.py
+  
+ ## Comment exécuter le challenge-2 sur le robot réel
+
+  - ouvrir le terminal 
+  - copier et coller la commande  ` ros2 launch pkg_mother challenge-2_robot.launch.py `
+  
+
