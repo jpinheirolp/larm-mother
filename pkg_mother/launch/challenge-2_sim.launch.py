@@ -39,10 +39,10 @@ def generate_launch_description():
             executable='camera',
             name="camera"),
         
-        Node( 
+      Node( 
             package='pkg_mother',
-            executable='centroid',
-            name="centroid"),
+            executable='find_bottles',
+            name="find_bottles"),
         
         # Node(
         #     package='pkg_mother',
