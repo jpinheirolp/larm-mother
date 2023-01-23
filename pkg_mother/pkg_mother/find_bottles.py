@@ -23,7 +23,11 @@ class CameraInterpret(Node):
         obstacles= []
         captured_image = np.array(scanMsg.data)
         bottle_found = find_closest_piece_image(captured_image,self.black_centroid,self.ground_centroid, 2 ,2,save_images=False)
-        print(bottle_found)
+
+        if len(bottle_found) == 0:
+            print("Pas de Bouteille ici")
+        else:
+            print("Voila, une Bouteille !!!!!!!!!")
 
 
         bottle_location = None
