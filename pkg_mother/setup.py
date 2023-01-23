@@ -23,7 +23,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [ 'mv_rand = pkg_mother.move_randomly:main',
-        'cap_im = pkg_mother.capture_images:main'
+        'cap_im = pkg_mother.capture_images:main',
+        'find_bottles = pkg_mother.find_bottles:main'
         ],
     },
 )
