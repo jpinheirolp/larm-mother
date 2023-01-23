@@ -65,6 +65,8 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     closest_distance = np.inf
     closest_piece = []
     tol_variable = 0
+    closet_piece_x = 0
+    closet_piece_y = 0
 
     for x in range(num_x_pieces ):
         for y in range(num_y_pieces ):
@@ -79,15 +81,20 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
                 #cv2.imwrite(f"./distance_images/{piece_positive_distance//100}_{piece_negative_distance//100}.jpg", image_piece)
                 cv2.imwrite(f"/home/bot/ros2_ws/larm-mother/distance_images/{piece_positive_distance/piece_negative_distance}.jpg", image_piece)
                 print('saving img')
+
             if closest_distance > piece_distance:
                 closest_distance = piece_distance
                 closest_piece = image_piece
                 tol_variable = piece_positive_distance/piece_negative_distance
+                closet_piece_x = x
+                closet_piece_y = y
 
-    if tol_variable > tol:
-        closest_piece = np.zeros(0)
+    returned_image =  image
+
+    if tol_variable < tol:
+        returned_image = cv2.circle(image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
         
-    return closest_piece
+    return returned_image
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
     list_vectors = []
@@ -116,7 +123,7 @@ class CameraInterpret(Node):
         self.bridge=CvBridge()
         super().__init__('scan_interpreter')
         self.create_subscription( Image, '/sensor_mesgs/image', self.camera_callback, 10)
-        self.scan_publisher = self.create_publisher(NavSatStatus, '/detection', 10) # change to text msg
+        self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
         self.orange_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_black.txt")
@@ -130,6 +137,8 @@ class CameraInterpret(Node):
         captured_image = scanMsg
         cv2_image = self.bridge.imgmsg_to_cv2(captured_image,"bgr8")
        # print(captured_image.shape)
+
+        '''
         black_bottle_found = find_closest_piece_image(cv2_image,height,width,self.black_centroid,self.ground_centroid, 3 ,3,save_images=False)
 
 
@@ -137,21 +146,18 @@ class CameraInterpret(Node):
             msg = "Pas de Bouteille Noir ici\n"
         else:
             msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
+        #'''
 
         orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=0.85,save_images=True)
         
-        msg = NavSatStatus()
+        msg = Image()
 
-        if len(orange_bottle_found) == 0:
-            #msg += "Pas de Bouteille Orange ici"
-            msg.status=0
-        else:
-            #msg += "Voila, une Bouteille Orange !!!!!!!!!"
-            msg.status=1
+        
+        msg.data= orange_bottle_found
 
 
         self.scan_publisher.publish(msg)
-        print(msg.status)
+        
 
         
        
