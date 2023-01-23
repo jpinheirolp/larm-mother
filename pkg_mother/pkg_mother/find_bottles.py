@@ -12,7 +12,7 @@ class CameraInterpret(Node):
     def __init__(self):
         super().__init__('scan_interpreter')
         self.create_subscription( Image, '/sensor_mesgs/image', self.camera_callback, 10)
-        self.scan_publisher = self.create_publisher(PointCloud, '/detection', 10) # change to text msg
+        self.scan_publisher = self.create_publisher(str, '/detection', 10) # change to text msg
         self.orange_centroid = np.loadtxt("./centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("./centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("./centroids/centroid_black.txt")
@@ -24,22 +24,22 @@ class CameraInterpret(Node):
         captured_image = np.array(scanMsg.data)
         black_bottle_found = find_closest_piece_image(captured_image,self.black_centroid,self.ground_centroid, 3 ,3,save_images=False)
 
+
         if len(black_bottle_found) == 0:
-            print("Pas de Bouteille Noir ici")
+            msg = "Pas de Bouteille Noir ici\n"
         else:
-            print("Voila, une Bouteille Noir !!!!!!!!!")
+            msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
 
         orange_bottle_found = find_closest_piece_image(captured_image,self.orange_centroid,self.ground_centroid, 3 ,3,save_images=False)
 
+        
         if len(orange_bottle_found) == 0:
-            print("Pas de Bouteille Orange ici")
+            msg += "Pas de Bouteille Orange ici"
         else:
-            print("Voila, une Bouteille Orange !!!!!!!!!")
+            msg += "Voila, une Bouteille Orange !!!!!!!!!"
 
 
-        bottle_location = None
-
-        self.scan_publisher.publish(bottle_location)
+        self.scan_publisher.publish(msg)
         
        
 
