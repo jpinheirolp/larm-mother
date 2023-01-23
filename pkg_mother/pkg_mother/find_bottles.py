@@ -153,7 +153,7 @@ class CameraInterpret(Node):
         msg = Image()
 
         
-        msg.data= orange_bottle_found
+        msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
 
 
         self.scan_publisher.publish(msg)
