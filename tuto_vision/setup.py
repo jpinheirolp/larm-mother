@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-        	'camera= tuto_vision.cameraros:main'
+        	'camera= tuto_vision.cameraros:main',
+        	'segment= tuto_vision.segmentation:main'
         ],
     },
 )
