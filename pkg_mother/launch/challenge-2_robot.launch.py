@@ -10,18 +10,23 @@ from launch.substitutions import LaunchConfiguration, TextSubstitution
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    tbot_sim_path = get_package_share_directory('tbot_sim')
+    tbot_sim_path = get_package_share_directory('tbot_start')
+    launch_file_dir = os.path.join(tbot_sim_path, 'launch')
+
     tbot_slam_path = get_package_share_directory('slam_toolbox')
     launch_file_dir = os.path.join(tbot_sim_path, 'launch')
     launch_slam_dir = os.path.join(tbot_slam_path, 'launch')
     return LaunchDescription([
+        
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([launch_file_dir, '/challenge-1.launch.py']),
             PythonLaunchDescriptionSource([ launch_slam_dir, '/online_sync_launch.py' ]),
             launch_arguments={
-                'use_sim_time:=False',
+                'use_sim_time':'False',
                
             }.items()),
+        
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([launch_file_dir, '/full.launch.py'])),
         Node(
             package='tuto_move',
             executable='scan_echo',
@@ -34,8 +39,8 @@ def generate_launch_description():
         
         Node(
             package='tuto_vision',
-            executable='camera',
-            name="camera"),
+            executable='cameraros',
+            name="cameraros"),
         
         Node( 
             package='pkg_mother',
@@ -51,5 +56,5 @@ def generate_launch_description():
 
 
     
-            ])
+            
          

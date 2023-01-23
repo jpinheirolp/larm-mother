@@ -16,7 +16,8 @@ def generate_launch_description():
     launch_slam_dir = os.path.join(tbot_slam_path, 'launch')
     return LaunchDescription([
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([launch_file_dir, '/challenge-1.launch.py']),
+            PythonLaunchDescriptionSource([launch_file_dir, '/challenge-1.launch.py'])),
+        IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ launch_slam_dir, '/online_sync_launch.py' ]),
             launch_arguments={
                 'use_sim_time:=True',
