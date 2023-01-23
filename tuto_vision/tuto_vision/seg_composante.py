@@ -24,10 +24,10 @@ def souris(event, x, y, flags, param):
     lo[0]=color-10
     hi[0]=color+10
 
-color=8
+color=100
 
-lo=np.array([color-5, 100, 70])
-hi=np.array([color+5,255 ,255])
+lo=np.array([color-5, 100, 50])
+hi=np.array([color+5, 255,255])
 
 color_info=(0, 0, 255)
 
@@ -43,23 +43,10 @@ while True:
     ret, frame=cap.read()
     image=cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask=cv2.inRange(image, lo, hi)
-    # Flouttage de l'image
-    image=cv2.blur(image, (7, 7))
-    # Erosion d'un mask
-    mask=cv2.erode(mask, None, iterations=4)
-    # dilatation d'un mask
-    mask=cv2.dilate(mask, None, iterations=4)
-    image2=cv2.bitwise_and(frame, frame, mask=mask)
-    elements=cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
-    if len(elements) > 0:
-         c=max(elements, key=cv2.contourArea)
-         ((x, y), rayon)=cv2.minEnclosingCircle(c)
-    if rayon>30:
-        cv2.circle(image2, (int(x), int(y)), int(rayon), color_info, 2)
-        cv2.circle(frame, (int(x), int(y)), 5, color_info, 10)
-        cv2.line(frame, (int(x), int(y)), (int(x)+150, int(y)), color_info, 2)
-        cv2.putText(frame, "Bouteille !!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
-        cv2.putText(frame, "Couleur: {:d}".format(color), (10, 30), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
+    mask=cv2.erode(mask, kernel, iterations=1)
+    mask=cv2.dilate(mask, kernel, iterations=1)
+    image2=cv2.bitwise_and(frame, frame, mask= mask)
+    cv2.putText(frame, "Couleur: {:d}".format(color), (10, 30), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
 
     # Affichage des composantes HSV sous la souris sur l'image
     pixel_hsv = " ".join(str(values) for values in hsv_px)
@@ -75,5 +62,3 @@ while True:
         break
 cap.release()
 cv2.destroyAllWindows()
-
-

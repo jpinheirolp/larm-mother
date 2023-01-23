@@ -17,6 +17,8 @@ from cv_bridge import CvBridge
 
 # On importe les fonctions de centroid_lib
 
+color_info=(0, 0, 255)
+
 
 def crop_image(image,num_x_pieces, num_y_pieces):
     num_pixels_x_image = image.shape[1] 
@@ -58,6 +60,8 @@ def create_image_vector_color_hist_space(im):
     return np.array(image_hist_vector)
 
 def find_closest_piece_image(image,height,width,positive_centroid, false_positive_centroid,num_x_pieces,num_y_pieces, tol = 0.4,save_images = False):
+    
+    
     num_pixels_x_image = width
     num_pixels_y_image = height
     num_pixels_x_piece = num_pixels_x_image // num_x_pieces # a big chink of this func is in crop_images, desrespecting the DRY principle
@@ -77,10 +81,10 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
             piece_distance = piece_positive_distance - piece_negative_distance * 0.6
             
 
-            if save_images:
+            #if save_images:
                 #cv2.imwrite(f"./distance_images/{piece_positive_distance//100}_{piece_negative_distance//100}.jpg", image_piece)
-                cv2.imwrite(f"/home/bot/ros2_ws/larm-mother/distance_images/{piece_positive_distance/piece_negative_distance}.jpg", image_piece)
-                print('saving img')
+                #cv2.imwrite(f"/home/bot/ros2_ws/larm-mother/distance_images/{piece_positive_distance/piece_negative_distance}.jpg", image_piece)
+                #print('saving img')
 
             if closest_distance > piece_distance:
                 closest_distance = piece_distance
@@ -92,8 +96,10 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     returned_image =  image
 
     if tol_variable < tol:
-        returned_image = cv2.circle(image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
-        
+        cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
+        cv2.putText(returned_image, "Bouteille orange!!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
+        cv2.imshow('Camera', returned_image)
+        print("bouteille")
     return returned_image
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
@@ -127,8 +133,7 @@ class CameraInterpret(Node):
         self.orange_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_black.txt")
-
-
+       
     def camera_callback(self, scanMsg):
         sample = []
         obstacles= []

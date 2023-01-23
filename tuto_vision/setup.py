@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
         	'cameraros= tuto_vision.cameraros:main',
-        	'segment= tuto_vision.segmentation:main'
+        	'segment= tuto_vision.segmentation:main',
+        	'camera=tuto_vision.camera:main'
         ],
     },
 )

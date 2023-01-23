@@ -1,90 +1,106 @@
-#!/usr/bin/env python3
-## Doc: https://dev.intelrealsense.com/docs/python2
-
-###############################################
-##      Open CV and Numpy integration        ##
-###############################################
-
+import cv2
+import numpy as np
 import pyrealsense2 as rs
 import time, numpy as np
 import sys, cv2
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import*
+from cv_bridge import CvBridge
+import signal
 
 
+class camera(Node):
 
-# Configure depth and color streams
-pipeline = rs.pipeline()
-config = rs.config()
-
-# Get device product line for setting a supporting resolution
-pipeline_wrapper = rs.pipeline_wrapper(pipeline)
-pipeline_profile = config.resolve(pipeline_wrapper)
-device = pipeline_profile.get_device()
-device_product_line = str(device.get_info(rs.camera_info.product_line))
-
-print( f"Connect: {device_product_line}" )
-found_rgb = True
-for s in device.sensors:
-    print( "Name:" + s.get_info(rs.camera_info.name) )
-    if s.get_info(rs.camera_info.name) == 'RGB Camera':
-        found_rgb = True
-
-if not (found_rgb):
-    print("Depth camera equired !!!")
-    exit(0)
-
-config.enable_stream(rs.stream.color, 848, 480, rs.format.bgr8, 60)
-config.enable_stream(rs.stream.depth, 848, 480, rs.format.z16, 60)
-
-# Start streaming
-pipeline.start(config)
-
-try:
-    count= 1
-    refTime= time.process_time()
-    freq= 60
-
-    sys.stdout.write("-")
-
-    while True:
-
-        # Wait for a coherent tuple of frames: depth, color and accel
-        frames = pipeline.wait_for_frames()
-
-        depth_frame = frames.first(rs.stream.depth)
-        color_frame = frames.first(rs.stream.color)
-
-        if not (depth_frame and color_frame):
-            continue
+    def __init__(self):
+        super().__init__('camera_vision')
+        self.bridge=CvBridge()
+        self.image_publisher = self.create_publisher(Image, '/sensor_mesgs/image', 10)
+        self.pipeline = rs.pipeline()
+        self.config = rs.config()
+        self.config.enable_stream(rs.stream.color, 848, 480, rs.format.bgr8, 60)
         
-        # Convert images to numpy arrays
-        depth_image = np.asanyarray(depth_frame.get_data())
-        color_image = np.asanyarray(color_frame.get_data())
 
-        # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
-        depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+    def fonctionvision(self):
+        def souris(event, x, y, flags, param):
+            global lo, hi, color, hsv_px
 
-        depth_colormap_dim = depth_colormap.shape
-        color_colormap_dim = color_image.shape
+            if event == cv2.EVENT_MOUSEMOVE:
+                # Conversion des trois couleurs RGB sous la souris en HSV
+                px = frame[y,x]
+                px_array = np.uint8([[px]])
+                hsv_px = cv2.cvtColor(px_array,cv2.COLOR_BGR2HSV)
 
-        sys.stdout.write( f"\r- {color_colormap_dim} - {depth_colormap_dim} - ({round(freq)} fps)" )
+            if event==cv2.EVENT_MBUTTONDBLCLK:
+                color=image[y, x][0]
 
-        # Show images
-        images = np.hstack((color_image, depth_colormap)) # supose that depth_colormap_dim == color_colormap_dim (640x480) otherwize: resized_color_image = cv2.resize(color_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
+            if event==cv2.EVENT_LBUTTONDOWN:
+                if color>5:
+                    color-=1
 
-        # Show images
-        cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('RealSense', images)
-        cv2.waitKey(1)
-        
-        # Frequency:
-        if count == 10 :
-            newTime= time.process_time()
-            freq= 10/((newTime-refTime))
-            refTime= newTime
-            count= 0
-        count+= 1
+            if event==cv2.EVENT_RBUTTONDOWN:
+                if color<250:
+                    color+=1
 
-finally:
-    # Stop streaming
-    print("\nEnding...")
-    pipeline.stop()
+            lo[0]=color-10
+            hi[0]=color+10
+
+        color=100
+
+        lo=np.array([color-5, 100, 50])
+        hi=np.array([color+5, 255,255])
+
+        color_info=(0, 0, 255)
+
+        cap=cv2.VideoCapture(0)
+        cv2.namedWindow('Camera')
+        cv2.setMouseCallback('Camera', souris)
+        hsv_px = [0,0,0]
+
+        # Creating morphological kernel
+        kernel = np.ones((3, 3), np.uint8)
+
+        while True:
+            ret, frame=cap.read()
+            image=cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            image_publiée= self.bridge.cv2_to_imgmsg(frame,"bgr8")
+            self.image_publisher.publish(image_publiée)
+            mask=cv2.inRange(image, lo, hi)
+            mask=cv2.erode(mask, kernel, iterations=1)
+            mask=cv2.dilate(mask, kernel, iterations=1)
+            image2=cv2.bitwise_and(frame, frame, mask= mask)
+            cv2.putText(frame, "Couleur: {:d}".format(color), (10, 30), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
+
+            # Affichage des composantes HSV sous la souris sur l'image
+            pixel_hsv = " ".join(str(values) for values in hsv_px)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(frame, "px HSV: "+pixel_hsv, (10, 260),
+                    font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
+            #cv2.imshow('Camera', frame)
+            #cv2.imshow('image2', image2)
+            #cv2.imshow('Mask', mask)
+
+            if cv2.waitKey(1)&0xFF==ord('q'):
+                break
+        cap.release()
+        cv2.destroyAllWindows()
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    Camera =camera()
+
+    Camera.fonctionvision()
+    
+    # Start the ros infinit loop with the Camera node.
+    rclpy.spin_once(Camera)
+
+    # At the end, destroy the node explicitly.
+    Camera.destroy_node()
+
+    # and shut the light down.
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
