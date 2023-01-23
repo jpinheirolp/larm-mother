@@ -22,8 +22,19 @@ class CameraInterpret(Node):
         sample = []
         obstacles= []
         captured_image = np.array(scanMsg.data)
-        bottle_found = find_closest_piece_image(captured_image,self.black_centroid,self.ground_centroid, 2 ,2,save_images=False)
-        print(bottle_found)
+        black_bottle_found = find_closest_piece_image(captured_image,self.black_centroid,self.ground_centroid, 3 ,3,save_images=False)
+
+        if len(black_bottle_found) == 0:
+            print("Pas de Bouteille Noir ici")
+        else:
+            print("Voila, une Bouteille Noir !!!!!!!!!")
+
+        orange_bottle_found = find_closest_piece_image(captured_image,self.orange_centroid,self.ground_centroid, 3 ,3,save_images=False)
+
+        if len(orange_bottle_found) == 0:
+            print("Pas de Bouteille Orange ici")
+        else:
+            print("Voila, une Bouteille Orange !!!!!!!!!")
 
 
         bottle_location = None

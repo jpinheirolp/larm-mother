@@ -44,7 +44,7 @@ def create_image_vector_color_hist_space(im):
     
     return np.array(image_hist_vector)
 
-def find_closest_piece_image(image,positive_centroid, false_positive_centroid,num_x_pieces, num_y_pieces,save_images = False):
+def find_closest_piece_image(image,positive_centroid, false_positive_centroid,num_x_pieces,num_y_pieces, tol = 0.4,save_images = False):
     num_pixels_x_image = image.shape[1] 
     num_pixels_y_image = image.shape[0] 
     num_pixels_x_piece = num_pixels_x_image // num_x_pieces # a big chink of this func is in crop_images, desrespecting the DRY principle
@@ -61,12 +61,16 @@ def find_closest_piece_image(image,positive_centroid, false_positive_centroid,nu
             piece_distance = piece_positive_distance - piece_negative_distance * 0.6
 
             if save_images:
-                cv2.imwrite(f"./distance_images/{piece_positive_distance//100}_{piece_negative_distance//100}.jpg", image_piece)
+                #cv2.imwrite(f"./distance_images/{piece_positive_distance//100}_{piece_negative_distance//100}.jpg", image_piece)
+                cv2.imwrite(f"./distance_images/{piece_positive_distance/piece_negative_distance}.jpg", image_piece)
 
             if closest_distance > piece_distance:
                 closest_distance = piece_distance
                 closest_piece = image_piece
-   
+
+    if piece_positive_distance/piece_negative_distance > tol:
+        closest_piece = np.zeros(0)
+        
     return closest_piece
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
