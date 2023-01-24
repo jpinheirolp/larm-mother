@@ -67,6 +67,15 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     tol_variable = 0
     closet_piece_x = 0
     closet_piece_y = 0
+    
+    '''
+    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
+
+    lower_orange_bottle = np.array([5,180, 120]) # 5, 180 , ?
+    upper_orange_bottle = np.array([15,255,255])
+    mask = cv.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
+    res = cv.bitwise_and(img, img, mask=mask)
+    # '''
 
     for x in range(num_x_pieces ):
         for y in range(num_y_pieces ):
