@@ -117,7 +117,7 @@ class Move_Randomly(Node):
         else:
             if abs(num_points_left - num_points_right) < 60:
                 print('HERE i am')
-                self.command == "turn_to_rnd_position"
+                self.command = "turn_to_rnd_position"
                 
             elif num_points_left < num_points_right:
                 #there is a object on the left
