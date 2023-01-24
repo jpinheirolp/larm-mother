@@ -71,23 +71,22 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     tol_variable = 0
     closet_piece_x = 0
     closet_piece_y = 0
-    
-    '''
-    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
 
-    lower_orange_bottle = np.array([5,180, 120]) # 5, 180 , ?
-    upper_orange_bottle = np.array([15,255,255])
-    mask = cv.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
-    res = cv.bitwise_and(img, img, mask=mask)
-    # '''
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    lower_orange_bottle = np.array([3,150,100])# 5, 180 , ?
+    upper_orange_bottle = np.array([17,255,255])
+    mask = cv2.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
+    res = cv2.bitwise_and(image, image, mask=mask)
+    
 
     for x in range(num_x_pieces ):
         for y in range(num_y_pieces ):
-            image_piece = image[y*num_pixels_y_piece : (y+1)*num_pixels_y_piece, x*num_pixels_x_piece : (x+1)*num_pixels_x_piece]
+            image_piece = res[y*num_pixels_y_piece : (y+1)*num_pixels_y_piece, x*num_pixels_x_piece : (x+1)*num_pixels_x_piece]
             piece_vec_hist = create_image_vector_color_hist_space(image_piece) #this should ne a 2dimensional array
             piece_positive_distance = np.linalg.norm(positive_centroid - piece_vec_hist,ord=1)
             piece_negative_distance = np.linalg.norm(false_positive_centroid - piece_vec_hist,ord=1)
-            piece_distance = piece_positive_distance - piece_negative_distance * 0.6
+            piece_distance = piece_positive_distance #- piece_negative_distance * 0.6
             
 
             #if save_images:
