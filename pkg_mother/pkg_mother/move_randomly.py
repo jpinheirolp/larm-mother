@@ -115,7 +115,10 @@ class Move_Randomly(Node):
             self.command = "go_foward"
 
         else:
-            if num_points_left < num_points_right:
+            if abs(num_points_left - num_points_right) < 30:
+                self.command == "turn_to_rnd_position"
+                
+            elif num_points_left < num_points_right:
                 #there is a object on the left
                 self.command = "turn_left"
                 self.robot_left_angular_speed = abs(sum_for_robot_right_angular_speed/(num_points_right + 1)) + self.robot_min_angular_speed
