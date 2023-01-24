@@ -15,6 +15,9 @@ class cameraselection(Node):
     def __init__(self):
          super().__init__('camera_vision')
          self.bridge=CvBridge()
+ 
+         self.image_publisher = self.create_publisher(Image, '/sensor_mesgs/image', 10)
+        
          #self.image_subscription = self.create_subscription( Image, '/sensor_mesgs/image', self.fonctionselection, 10)
          #self.timer = self.create_timer(0.1, self.interpret_obstacles) # 0.1 seconds to target a frequency of 10 hertz
         # Configure depth and color streams
@@ -32,9 +35,15 @@ class cameraselection(Node):
         r = cv2.selectROI(cap)
 
         ret, frame=cap.read()
+        self.config.enable_stream(rs.stream.color, 848, 480, rs.format.bgr8, 60)
+        msg= self.bridge.cv2_to_imgmsg(frame,"bgr8")
+        self.image_publisher.publish(msg)
+       
 
         # Crop image
         imCrop = frame[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])]
+
+       
 
         average_h = np.mean(imCrop[:,:,0])
         average_s = np.mean(imCrop[:,:,1])
