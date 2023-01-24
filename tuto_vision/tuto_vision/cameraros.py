@@ -124,7 +124,7 @@ class camera(Node):
                 # cv2.waitKey(1)
                 
                 
-                cv2.imwrite(f"/home/bot/Videos/image_{self.saved_img_number}")
+                cv2.imwrite(f"/home/bot/Videos/image_{self.saved_img_number}", color_image )
                 
                 self.saved_img_number += 1
                 
