@@ -50,13 +50,19 @@ def create_image_vector_color_hist_space(im):
     for i in range(len(color_list)):
         hist = color_list[i].ravel()
         (n, bins, patches) = plt.hist(hist, bins=256, color = color_names[i],density=True)
+        if i == 0:
+            bins = bins[5:15]
+        elif i == 1:
+            bins = bins[180:]
+        elif i == 2:
+            bins = bins[120:]
+
         image_hist_vector.extend(bins)
 
     '''for i in range(len(colors_hsv)):
         hist = colors_hsv[i].ravel()
         (n, bins, patches) = plt.hist(hist, bins=256, color = color_names[i],density=True)
         image_hist_vector.extend(bins) #'''
-    
     return np.array(image_hist_vector)
 
 def find_closest_piece_image(image,height,width,positive_centroid, false_positive_centroid,num_x_pieces,num_y_pieces, tol = 0.4,save_images = False):
@@ -84,6 +90,7 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
         for y in range(num_y_pieces ):
             image_piece = res[y*num_pixels_y_piece : (y+1)*num_pixels_y_piece, x*num_pixels_x_piece : (x+1)*num_pixels_x_piece]
             piece_vec_hist = create_image_vector_color_hist_space(image_piece) #this should ne a 2dimensional array
+            print(len(positive_centroid), len(piece_vec_hist))
             piece_positive_distance = np.linalg.norm(positive_centroid - piece_vec_hist,ord=1)
             piece_negative_distance = np.linalg.norm(false_positive_centroid - piece_vec_hist,ord=1)
             piece_distance = piece_positive_distance #- piece_negative_distance * 0.6
@@ -161,7 +168,7 @@ class CameraInterpret(Node):
             msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
         #'''
 
-        orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=0.85,save_images=True)
+        orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=1,save_images=True)
         
         msg = Image()
 
