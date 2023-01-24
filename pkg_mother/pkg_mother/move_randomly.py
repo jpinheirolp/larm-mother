@@ -23,7 +23,7 @@ class Move_Randomly(Node):
         self.rectangle_left_y_limit = -0.3
         self.rectangle_right_y_limit = 0.3
         self.rectangle_closer_x_limit = 0
-        self.rectangle_further_away_x_limit = 1.5
+        self.rectangle_further_away_x_limit = 0.6
         self.rectangle_low_z_limit = -0.18
         self.rectangle_high_z_limit = 0.4
         self.rectangle_center_y_direction = 0
@@ -44,9 +44,9 @@ class Move_Randomly(Node):
 
         self.robot_linear_speed = 0.1
 
-        self.robot_close_linear_speed = 0.1
-        self.robot_middle_linear_speed = 0.2
-        self.robot_far_linear_speed = 0.3
+        self.robot_close_linear_speed = 0.01
+        self.robot_middle_linear_speed = 0.02
+        self.robot_far_linear_speed = 0.03
         
 
         self.mutex_trn_rnd = False
