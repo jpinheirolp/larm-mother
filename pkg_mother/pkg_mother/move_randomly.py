@@ -45,8 +45,8 @@ class Move_Randomly(Node):
         self.robot_linear_speed = 0.1
 
         self.robot_close_linear_speed = 0.1
-        self.robot_middle_linear_speed = 0.2
-        self.robot_far_linear_speed = 0.3
+        self.robot_middle_linear_speed = 0.15
+        self.robot_far_linear_speed = 0.2
         
 
         self.mutex_trn_rnd = False
