@@ -17,8 +17,9 @@ class ScanInterpret(Node):
         sample = []
         obstacles= []
         angle= scanMsg.angle_min
+      
         for aDistance in scanMsg.ranges :
-            if 0.1 < aDistance and aDistance < 5.0 :
+            if 0.1 < aDistance and aDistance < 5.0 and abs(angle) < 1.5:
 
             
                 samplePoint= [
@@ -35,7 +36,9 @@ class ScanInterpret(Node):
                 aPoint.y= (float)(math.sin( angle ) * aDistance)
                 aPoint.z= (float)(0)
                 obstacles.append( aPoint )
+              
             angle+= scanMsg.angle_increment
+        
             sample= [ [ round(p[0], 2), round(p[1], 2) ] for p in  sample[10:20] ]
             nuage=PointCloud()
             nuage.header.frame_id='laser'

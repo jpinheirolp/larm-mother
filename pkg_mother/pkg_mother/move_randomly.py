@@ -44,9 +44,9 @@ class Move_Randomly(Node):
 
         self.robot_linear_speed = 0.1
 
-        self.robot_close_linear_speed = 0.01
-        self.robot_middle_linear_speed = 0.02
-        self.robot_far_linear_speed = 0.03
+        self.robot_close_linear_speed = 0.1
+        self.robot_middle_linear_speed = 0.2
+        self.robot_far_linear_speed = 0.3
         
 
         self.mutex_trn_rnd = False
@@ -64,7 +64,7 @@ class Move_Randomly(Node):
         num_points_middle = 0
         num_points_far = 0
 
-        tol_of_points_inside_rect = 75
+        tol_of_points_inside_rect = 25
         sum_for_robot_left_angular_speed = 0
         sum_for_robot_right_angular_speed = 0
         for point in obstacles_points:
