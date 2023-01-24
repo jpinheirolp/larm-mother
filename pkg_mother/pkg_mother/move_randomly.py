@@ -115,8 +115,8 @@ class Move_Randomly(Node):
             self.command = "go_foward"
 
         else:
-            if abs(num_points_left - num_points_right) < 60:
-                print('HERE i am')
+            if abs(num_points_left - num_points_right) < 20:
+                print(num_points_left - num_points_right)
                 self.command = "turn_to_rnd_position"
                 
             elif num_points_left < num_points_right:
