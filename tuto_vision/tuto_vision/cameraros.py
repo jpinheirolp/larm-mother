@@ -34,6 +34,8 @@ class camera(Node):
         # Configure depth and color streams
         self.pipeline = rs.pipeline()
         self.config = rs.config()
+        
+        self.saved_img_number = 0
                 
 
     
@@ -74,7 +76,7 @@ class camera(Node):
 
         count= 1
         refTime= time.process_time()
-        freq= 60
+        freq= 30
 
 
         # Start streaming
@@ -120,6 +122,11 @@ class camera(Node):
                 # cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
                 # cv2.imshow('RealSense', images)
                 # cv2.waitKey(1)
+                
+                
+                cv2.imwrite(f"/home/bot/Videos/image_{self.saved_img_number}")
+                
+                self.saved_img_number += 1
                 
                 msg_image = self.bridge.cv2_to_imgmsg(color_image,"bgr8")
                 msg_image.header.stamp = self.get_clock().now().to_msg()
