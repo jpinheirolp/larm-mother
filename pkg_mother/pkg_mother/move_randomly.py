@@ -136,12 +136,12 @@ class Move_Randomly(Node):
         self.time_to_rnd_turn -= 1
         ##print(self.time_to_rnd_turn,"time to turn")
         if self.command == "turn_to_rnd_position" and not self.mutex_trn_rnd:
-            #print("I should turn")
+            print("I should turn")
             self.mutex_trn_rnd = True
             self.rotation_counter = round(random() * 2 * math.pi * 10) # determines a random angular position
             self.time_to_rnd_turn = self.time_interval_rnd_turn
         if self.mutex_trn_rnd: #if the robot is turning the other movements stop
-            #print("Im turning")
+            print("Im turning")
             if self.rotation_counter <= 0:
                 self.rotation_counter = 0
                 self.mutex_trn_rnd = False
