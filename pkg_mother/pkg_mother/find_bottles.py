@@ -114,12 +114,9 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
         #cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
         #cv2.putText(returned_image, "Bouteille orange!!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
         #cv2.imshow('Camera', returned_image)
-        text_image = ''' ----------------
-|              |
-|              |
-|              |
-----------------
-        '''
+        ''' ----------------
+
+        
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         org = (closet_piece_x*num_pixels_x_piece,closet_piece_y*num_pixels_y_piece)
@@ -131,7 +128,7 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
         returned_image = cv2.addWeighted(image, alpha, filtered_image, beta, 0.0)
 
         returned_image = cv2.putText(returned_image, text_image, org, font, fontScale, color)
-        print("bouteille")
+        print("bouteille") '''
 
     return returned_image
 
@@ -162,7 +159,8 @@ class CameraInterpret(Node):
         self.bridge=CvBridge()
         super().__init__('scan_interpreter')
         self.create_subscription( Image, '/sensor_mesgs/image', self.camera_callback, 10)
-        self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
+        #self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
+        self.scan_publisher = self.create_publisher(str, '/detection', 10) # change to text msg
         self.orange_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_black.txt")
@@ -188,11 +186,12 @@ class CameraInterpret(Node):
 
         orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=1,save_images=True)
         
-        msg = Image()
+        #msg = Image()
 
         
-        msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
+        #msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
 
+        msg = "bouteille"
 
         self.scan_publisher.publish(msg)
         
