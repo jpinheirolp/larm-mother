@@ -130,7 +130,7 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
         beta = (1.0 - alpha)
         returned_image = cv2.addWeighted(image, alpha, filtered_image, beta, 0.0)
 
-        cv2.putText(returned_image, text_image, org, font, fontScale, color)
+        returned_image = cv2.putText(returned_image, text_image, org, font, fontScale, color)
         print("bouteille")
 
     return returned_image
