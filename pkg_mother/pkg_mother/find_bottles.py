@@ -109,7 +109,8 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
                 closet_piece_x = x
                 closet_piece_y = y
 
-    returned_image =  image
+    #returned_image =  image
+    returned_image = ""
 
     if tol_variable < tol:
         #cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
@@ -130,7 +131,7 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
 
         returned_image = cv2.putText(returned_image, text_image, org, font, fontScale, color)
         print("bouteille") '''
-
+        returned_image = 'bouteille'
     return returned_image
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
@@ -192,8 +193,8 @@ class CameraInterpret(Node):
         
         #msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
         msg = String()
-        
-        msg.data = "bouteille"
+
+        msg.data = orange_bottle_found
 
         self.scan_publisher.publish(msg)
         
