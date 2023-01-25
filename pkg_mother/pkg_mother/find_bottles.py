@@ -83,12 +83,12 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     lower_orange_bottle = np.array([3,150,100])# 5, 180 , ?
     upper_orange_bottle = np.array([17,255,255])
     mask = cv2.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
-    res = cv2.bitwise_and(image, image, mask=mask)
+    filtered_image = cv2.bitwise_and(image, image, mask=mask)
     
 
     for x in range(num_x_pieces ):
         for y in range(num_y_pieces ):
-            image_piece = res[y*num_pixels_y_piece : (y+1)*num_pixels_y_piece, x*num_pixels_x_piece : (x+1)*num_pixels_x_piece]
+            image_piece = filtered_image[y*num_pixels_y_piece : (y+1)*num_pixels_y_piece, x*num_pixels_x_piece : (x+1)*num_pixels_x_piece]
             piece_vec_hist = create_image_vector_color_hist_space(image_piece) #this should ne a 2dimensional array
             print(len(positive_centroid), len(piece_vec_hist))
             piece_positive_distance = np.linalg.norm(positive_centroid - piece_vec_hist,ord=1)
@@ -111,10 +111,13 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
     returned_image =  image
 
     if tol_variable < tol:
-        cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
-        cv2.putText(returned_image, "Bouteille orange!!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
-        cv2.imshow('Camera', returned_image)
-        print("bouteille")
+        #cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
+        #cv2.putText(returned_image, "Bouteille orange!!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
+        #cv2.imshow('Camera', returned_image)
+        #print("bouteille")
+        alpha = 0.5
+        beta = (1.0 - alpha)
+        returned_image = cv2.addWeighted(image, alpha, filtered_image, beta, 0.0)
     return returned_image
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
