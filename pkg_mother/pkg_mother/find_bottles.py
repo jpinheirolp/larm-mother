@@ -66,6 +66,16 @@ def create_image_vector_color_hist_space(im):
         image_hist_vector.extend(bins) #'''
     return np.array(image_hist_vector)
 
+def find_orange_bottle(image,height,width):
+
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    lower_orange_bottle = np.array([3,150,100])# 5, 180 , ?
+    upper_orange_bottle = np.array([17,255,255])
+    mask = cv2.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
+    filtered_image = cv2.bitwise_and(image, image, mask=mask)
+    print(filtered_image.shape)
+    pass
+
 def find_closest_piece_image(image,height,width,positive_centroid, false_positive_centroid,num_x_pieces,num_y_pieces, tol = 0.4,save_images = False):
     
     
@@ -165,11 +175,44 @@ class CameraInterpret(Node):
         super().__init__('scan_interpreter')
         self.create_subscription( Image, '/sensor_mesgs/image', self.camera_callback, 10)
         #self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
-        self.scan_publisher = self.create_publisher(String, '/detection', 10) # change to text msg
+        self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
         self.orange_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_black.txt")
        
+    def find_orange_bottle(image):
+
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        lower_orange_bottle = np.array([5,180,170])# 5, 180 , ?
+        upper_orange_bottle = np.array([15,255,255])
+        mask = cv2.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
+        print(mask.shape)
+        filtered_image = cv2.bitwise_and(image, image, mask=mask)
+        luminosity = 0
+        print(filtered_image.shape)
+        
+        mask_colums = np.sum(mask)
+        luminosity += np.sum(mask_colums)
+
+        print(luminosity)
+        if luminosity < 10000:
+            return image
+
+        circled_image = image
+        elements=cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+        if len(elements) > 0:
+            c=max(elements, key=cv2.contourArea)
+            ((x, y), rayon)=cv2.minEnclosingCircle(c)
+            color_info = (0,0,255)
+            
+            if rayon>1:
+                #cv2.circle(image2, (int(x), int(y)), int(rayon), color_info, 2)
+                circled_image = cv2.circle(image, (int(x), int(y)), 5, color_info, 10)
+                circled_image = cv2.line(circled_image, (int(x), int(y)), (int(x)+150, int(y)), color_info, 2)
+                circled_image = cv2.putText(circled_image, "Bouteille !!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
+
+        return circled_image
+
     def camera_callback(self, scanMsg):
         sample = []
         obstacles= []
@@ -189,15 +232,15 @@ class CameraInterpret(Node):
             msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
         #'''
 
-        orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=0.5,save_images=True)
+        orange_bottle_found = self.find_orange_bottle(cv2_image)
         
         #msg = Image()
 
         
         #msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
-        msg = String()
+        msg = Image()
 
-        msg.data = orange_bottle_found
+        msg =  self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8") 
 
         self.scan_publisher.publish(msg)
         
