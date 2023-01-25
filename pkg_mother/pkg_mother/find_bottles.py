@@ -222,7 +222,7 @@ class CameraInterpret(Node):
         else:
             msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
         #'''
-
+        
         orange_bottle_found = self.find_orange_bottle(cv2_image)
         
         #msg = Image()
