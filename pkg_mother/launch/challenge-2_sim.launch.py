@@ -18,9 +18,9 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([launch_file_dir, '/challenge-1.launch.py'])),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([ launch_slam_dir, '/online_sync_launch.py' ]),
+                  		                       	 PythonLaunchDescriptionSource([ launch_slam_dir, '/online_sync_launch.py' ]),
             launch_arguments={
-                'use_sim_time:=True',
+                'use_sim_time':'True',
                
             }.items()),
         Node(
@@ -35,10 +35,10 @@ def generate_launch_description():
                 ("/multi/cmd_nav", "/cmd_vel")
             ]),
         
-        Node(
-            package='tuto_vision',
-            executable='camera',
-            name="camera"),
+        #Node(
+         #   package='tuto_vision',
+          #  executable='cameraros',
+          #  name="cameraros"),
         
       Node( 
             package='pkg_mother',
