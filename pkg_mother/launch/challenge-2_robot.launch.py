@@ -26,7 +26,7 @@ def generate_launch_description():
             }.items()),
         
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([launch_file_dir, '/full.launch.py'])),
+            PythonLaunchDescriptionSource([launch_file_dir, '/minimal.launch.py'])),
         Node(
             package='tuto_move',
             executable='scan_echo',
