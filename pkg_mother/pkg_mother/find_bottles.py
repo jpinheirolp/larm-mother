@@ -94,7 +94,7 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
             print(len(positive_centroid), len(piece_vec_hist))
             piece_positive_distance = np.linalg.norm(positive_centroid - piece_vec_hist,ord=1)
             piece_negative_distance = np.linalg.norm(false_positive_centroid - piece_vec_hist,ord=1)
-            piece_distance = piece_positive_distance #- piece_negative_distance * 0.6
+            piece_distance = piece_positive_distance - piece_negative_distance * 0.6
             
 
             #if save_images:
