@@ -114,10 +114,25 @@ def find_closest_piece_image(image,height,width,positive_centroid, false_positiv
         #cv2.circle(returned_image,(int((closet_piece_x  +0.5 ) * num_pixels_x_piece ),int((closet_piece_y  +0.5 ) * num_pixels_y_piece )),num_pixels_x_image,(0,0,0),1)
         #cv2.putText(returned_image, "Bouteille orange!!!", (int(x)+10, int(y) -10), cv2.FONT_HERSHEY_DUPLEX, 1, color_info, 1, cv2.LINE_AA)
         #cv2.imshow('Camera', returned_image)
-        #print("bouteille")
+        text_image = ''' ----------------
+|              |
+|              |
+|              |
+----------------
+        '''
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        org = (closet_piece_x*num_pixels_x_piece,closet_piece_y*num_pixels_y_piece)
+        fontScale = 1
+        color = (240,10,10)
+        
         alpha = 0.5
         beta = (1.0 - alpha)
         returned_image = cv2.addWeighted(image, alpha, filtered_image, beta, 0.0)
+
+        cv2.putText(returned_image, text_image, org, font, fontScale, color)
+        print("bouteille")
+
     return returned_image
 
 def create_centroids(img_file_list, img_folder_list, num_pcs_x, num_pcs_y,k):
