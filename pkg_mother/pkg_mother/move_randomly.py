@@ -49,7 +49,7 @@ class Move_Randomly(Node):
         self.robot_far_linear_speed = 0.2
         
 
-        self.mutex_trn_rnd = False
+        self.mutex_trn_rnd = 0
         self.rotation_counter = 0
         
     
@@ -116,7 +116,7 @@ class Move_Randomly(Node):
 
         else:
             if abs(num_points_left - num_points_right) < 20:
-                print(num_points_left - num_points_right)
+            
                 self.command = "turn_to_rnd_position"
                 
             elif num_points_left < num_points_right:
@@ -135,19 +135,25 @@ class Move_Randomly(Node):
         ##print(self.command)
         self.time_to_rnd_turn -= 1
         ##print(self.time_to_rnd_turn,"time to turn")
-        if self.command == "turn_to_rnd_position" and not self.mutex_trn_rnd:
+        if self.command == "turn_to_rnd_position" and self.mutex_trn_rnd == 0:
             print("I should turn")
-            self.mutex_trn_rnd = True
+            angular_speed_sig = 1
+            if bool(random.getrandbits(1)):
+                angular_speed_sig = -1
+            self.mutex_trn_rnd =  angular_speed_sig
             self.rotation_counter = round(random() * 2 * math.pi * 10) # determines a random angular position
             self.time_to_rnd_turn = self.time_interval_rnd_turn
-        if self.mutex_trn_rnd: #if the robot is turning the other movements stop
+        if self.mutex_trn_rnd != 0: #if the robot is turning the other movements stop
             print("Im turning")
             if self.rotation_counter <= 0:
                 self.rotation_counter = 0
-                self.mutex_trn_rnd = False
+                self.mutex_trn_rnd = 0
                 return 0
+
             self.rotation_counter -= 1
-            velo.angular.z = 0.5
+            angular_speed_sig = 1
+            
+            velo.angular.z = 0.5 * self.mutex_trn_rnd
             velo.angular.x = 0.0
         elif self.command == "go_foward": #would be more optmized with a switch :(
             velo.linear.x = self.robot_linear_speed
