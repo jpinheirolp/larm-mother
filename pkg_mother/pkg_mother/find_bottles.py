@@ -186,7 +186,7 @@ class CameraInterpret(Node):
             msg = "Voila, une Bouteille Noir !!!!!!!!!\n"
         #'''
 
-        orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=1,save_images=True)
+        orange_bottle_found = find_closest_piece_image(cv2_image,height,width,self.orange_centroid,self.ground_centroid, 3 ,3,tol=0.7,save_images=True)
         
         #msg = Image()
 
