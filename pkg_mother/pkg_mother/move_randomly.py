@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import*
 from geometry_msgs.msg import Twist
-from random import random
+from random import random, getrandbits
 #from nav_msgs.msg import Odometry
 
 import math
@@ -138,7 +138,7 @@ class Move_Randomly(Node):
         if self.command == "turn_to_rnd_position" and self.mutex_trn_rnd == 0:
             print("I should turn")
             angular_speed_sig = 1
-            if bool(random.getrandbits(1)):
+            if bool(getrandbits(1)):
                 angular_speed_sig = -1
             self.mutex_trn_rnd =  angular_speed_sig
             self.rotation_counter = round(random() * 2 * math.pi * 10) # determines a random angular position
