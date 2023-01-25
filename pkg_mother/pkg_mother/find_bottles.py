@@ -14,6 +14,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 import cv2
 from cv_bridge import CvBridge
+from std_msgs.msg import String
 
 # On importe les fonctions de centroid_lib
 
@@ -160,7 +161,7 @@ class CameraInterpret(Node):
         super().__init__('scan_interpreter')
         self.create_subscription( Image, '/sensor_mesgs/image', self.camera_callback, 10)
         #self.scan_publisher = self.create_publisher(Image, '/detection', 10) # change to text msg
-        self.scan_publisher = self.create_publisher(str, '/detection', 10) # change to text msg
+        self.scan_publisher = self.create_publisher(String, '/detection', 10) # change to text msg
         self.orange_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_orange.txt")
         self.ground_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_red.txt")
         self.black_centroid = np.loadtxt("/home/bot/ros2_ws/larm-mother/pkg_mother/pkg_mother/centroids/centroid_black.txt")
@@ -190,8 +191,9 @@ class CameraInterpret(Node):
 
         
         #msg= self.bridge.cv2_to_imgmsg(orange_bottle_found,"bgr8")
-
-        msg = "bouteille"
+        msg = String()
+        
+        msg.data = "bouteille"
 
         self.scan_publisher.publish(msg)
         
