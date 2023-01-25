@@ -66,15 +66,6 @@ def create_image_vector_color_hist_space(im):
         image_hist_vector.extend(bins) #'''
     return np.array(image_hist_vector)
 
-def find_orange_bottle(image,height,width):
-
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    lower_orange_bottle = np.array([3,150,100])# 5, 180 , ?
-    upper_orange_bottle = np.array([17,255,255])
-    mask = cv2.inRange(hsv, lower_orange_bottle, upper_orange_bottle)
-    filtered_image = cv2.bitwise_and(image, image, mask=mask)
-    print(filtered_image.shape)
-    pass
 
 def find_closest_piece_image(image,height,width,positive_centroid, false_positive_centroid,num_x_pieces,num_y_pieces, tol = 0.4,save_images = False):
     
