@@ -153,7 +153,7 @@ class Move_Randomly(Node):
             self.rotation_counter -= 1
             angular_speed_sig = 1
             
-            velo.angular.z = 0.5 * self.mutex_trn_rnd
+            velo.angular.z = 0.7 * self.mutex_trn_rnd
             velo.angular.x = 0.0
         elif self.command == "go_foward": #would be more optmized with a switch :(
             velo.linear.x = self.robot_linear_speed
