@@ -47,7 +47,11 @@ Pour cela nous avons 3 fichier launch:
 
 # Challenge 2
 
-L'objectif de ce challenge est de faire en sorte que le robot puisse faire une carte de la pièce dans laquelle le robot se déplace. Il sera de plus capable de repérer deux types de bouteilles :  Une bouteille orange et une bouteille noire Nuka-cola. A chaque fois que le robot détecte une bouteille, il affiche un message de détection.
+L'objectif de ce challenge est de faire en sorte que le robot puisse faire une carte de la pièce dans laquelle le robot se déplace. Il sera de plus capable de repérer deux types de bouteilles :  Une bouteille orange et une bouteille noire Nuka-cola. A chaque fois que le robot détecte une bouteille, il affiche un message de détection, qui est pour notre code une image dans laquelle la bouteille est relevée dans l'image.
+
+## Attention
+
+Pour le moment, le robot n'est capable de détecter que les bouteilles orange. La méthode basée de détection basée sur la couleur de la bouteille ne fonctionne pas avec les bouteilles noires, le noir n'étant pas une couleur.
 
 ## Comment exécuter la simulation du challenge-2
 
@@ -59,4 +63,10 @@ L'objectif de ce challenge est de faire en sorte que le robot puisse faire une c
   - ouvrir le terminal 
   - copier et coller la commande  ` ros2 launch pkg_mother challenge-2_robot.launch.py `
   
+# Challenge 3
 
+Le challenge 3 est dans la continuité du challenge 3. A l'issu de ce challenge, le robot doit être capable de mettre dans un repère un marqueur des bouteilles présentes dans l'arène, et de reconnaître une bouteille déjà relevée dans le repère. 
+
+## Attention
+
+Malheureusement, cette partie n'a pu être abordée par manque de temps. 
