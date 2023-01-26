@@ -56,7 +56,7 @@ Pour le moment, le robot n'est capable de détecter que les bouteilles orange. L
 ## Comment exécuter la simulation du challenge-2
 
   - ouvrir le terminal 
-  - copier et coller la commande ` ros2 launch pkg_mother challenge-2_sim.launch.py
+  - copier et coller la commande ` ros2 launch pkg_mother challenge-2_sim.launch.py `
   
  ## Comment exécuter le challenge-2 sur le robot réel
 
