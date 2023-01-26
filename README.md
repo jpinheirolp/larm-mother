@@ -65,7 +65,7 @@ Pour le moment, le robot n'est capable de détecter que les bouteilles orange. L
   
 # Challenge 3
 
-Le challenge 3 est dans la continuité du challenge 3. A l'issu de ce challenge, le robot doit être capable de mettre dans un repère un marqueur des bouteilles présentes dans l'arène, et de reconnaître une bouteille déjà relevée dans le repère. 
+Le challenge 3 est dans la continuité du challenge 2. A l'issu de ce challenge, le robot doit être capable de mettre dans un repère un marqueur des bouteilles présentes dans l'arène, et de reconnaître une bouteille déjà relevée dans le repère. 
 
 ## Attention
 
