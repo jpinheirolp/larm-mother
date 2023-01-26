@@ -70,3 +70,11 @@ Le challenge 3 est dans la continuité du challenge 2. A l'issu de ce challenge,
 ## Attention
 
 Malheureusement, cette partie n'a pu être abordée par manque de temps. 
+
+#Visualisation
+
+Visualisation:
+
+Première tentative : Notre première idée de créer un algorithme de vision par ordinateur pour trouver la bouteille était très complexe. Nous avons mesuré la probabilité que la bouteille soit dans une image en calculant les distances dans un espace vectoriel défini. Dans cet espace vectoriel, chaque vecteur représente l'histogramme d'une image convertie en HSV. Une partie importante de l'algorithme était les centroïdes, les vecteurs qui représentent les histogrammes de couleurs les plus importants, l'orange de la bouteille, le noir de l'autre bouteille et le rouge du sol. Ils ont été créés en utilisant Kmeans avec k=1 dans un groupe d'images avec juste la couleur que nous voulions représenter. Après avoir eu le centroïde pour trouver si la bouteille est dans une image spécifique, nous divisons cette image en morceaux, puis nous calculons le vecteur de cette morceaux dans notre espace vectoriel d'histogramme de couleurs, et à la fin nous calculons la distance de ces vecteurs du pièces au centroid. Si la distance est inférieure à une tolérance définie, nous disons que l'image contient la bouteille.
+
+Deuxième tentative : puisque notre première tentative était de ralentir, nous avons décidé d'essayer quelque chose de beaucoup plus simple qui pourrait être beaucoup plus rapide. Dans cette deuxième méthode, nous commençons par convertir l'image en HSV, puis la filtrons vers une plage qui ne contient que l'orange de la bouteille. Après cela, nous travaillons le masque qui vient du filtre. Nous subdivisons ce masque en plus petits morceaux et simplement le nombre de pixels qu'il y a dans chaque morceau. Si le nombre de pixels est supérieur à la tolérance dans au moins un des morceaux on dit que l'image contient la bouteille orange.
