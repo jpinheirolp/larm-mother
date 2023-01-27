@@ -48,7 +48,7 @@ Pour cela nous avons 3 fichiers launch:
 
 ## Explication du code 
 
-Les deux fichiers launch exécutent plusieurs fichiers .py :
+Les deux fichiers launch (robot et simulation) exécutent plusieurs fichiers .py :
 
 - scan_echo.py qui permet de renvoyer un nuage de points des alentours du robot. Ce nuage de points est créé à l’aide du laser du robot. Le nuage de point est envoyé dans un topic /scan
 
@@ -62,6 +62,7 @@ Enfin, afin que le robot puisse visiter l’ensemble d’une pièce, nous disons
 - dans le cas de la simulation, c’est le fichier launch challenge-1.launch.py qui est exécuté, et qui est similaire au minimal_launch en plus de lancer une configuration de Gazebo .
 Un remapping de la vélocité fut nécessaire afin de faire bouger le robot dans la simulation. 
 
+Le fichier launch vizualisation exécute lui rviz2 dans une configuration particulière dans laquelle nous pouvons voir le nuage de points effectué par le robot.
 
 # Challenge 2
 
@@ -79,17 +80,33 @@ Pour le moment, le robot n'est capable de détecter que les bouteilles oranges. 
 ## Comment exécuter le challenge-2 sur le robot réel
 
   - ouvrir le terminal 
-  - copier et coller la commande  ` ros2 launch pkg_mother challenge-2_robot.launch.py `
+  - copier et coller la commande  ` ros2 launch pkg_mother challenge-2_robot.launch.py 
+  
+## Explication du code
 
+Les fichiers launch exécutent les scripts suivants:
+
+- scan_echo.py
+
+- move_randomly.py
+
+- minimal_launch.py dans le cas du robot et challenge-1.launch.py dans le cas de la simulation
+
+- online_sync_launch.py de slam toolbox, qui permet d'utiliser le laser afin de faire la map de la pièce
+
+- cameraros.py qui permet de récupérer les images de la caméra du robot, d'appliquer des masques sur celles-ci est de les publier sur un topic.
+
+- find_bottles.py. Ce fichier permet de récupérer les images publiées sur le topic et de les utiliser afin de détecter les bouteilles. La méthode de detection des bouteilles est basée sur le filtrage et est expliquée ci-dessous.  
+  
 ## Explication des algorithmes de detection testées
 
 Première tentative : Notre première idée d'algorithme de vision afin de détecter la bouteille était très complexe. Nous avons mesuré la probabilité que la bouteille soit dans une image en calculant les distances dans un espace vectoriel défini. Dans cet espace vectoriel, chaque vecteur représente l'histogramme d'une image convertie en HSV. Une partie importante de l'algorithme était les centroïdes, les vecteurs qui représentent les histogrammes de couleurs les plus importantes dans le cadre de notre détection, l'orange de la bouteille, le noir de l'autre bouteille et le rouge du sol. Ils ont été créés en utilisant Kmeans avec k=1 dans un groupe d'images avec juste la couleur que nous voulions représenter. Après avoir eu le centroïde pour trouver si la bouteille est dans une image spécifique, nous divisons cette image en morceaux, puis nous calculons le vecteur de chacun des morceaux dans notre espace vectoriel d'histogramme de couleurs, et à la fin nous calculons la distance de ces vecteurs du morceaux au centroid. Si la distance est inférieure à une tolérance définie, nous disons que l'image contient la bouteille.
 Cette méthode fut précise, cependant elle fut très lente, de l'ordre de 13 secondes pour le traitement d'une image, ce qui dans le cadre de notre robot en mouvement est inutile. Nous avons donc laissé tomber cette méthode. Cependant, les fonctions utilisées pour cette méthode est dans le fichier centroid_lib.py
 
 Deuxième tentative : Étant donné que notre première tentative était trop lente, nous avons décidé d'essayer quelque chose de beaucoup plus simple et donc plus rapide. Dans cette deuxième méthode, nous commençons par convertir l'image en HSV, puis la filtrons de sorte qu'il ne reste comme couleurs qu'une plage qui ne contient que l'orange de la bouteille. Après cela, nous travaillons le masque qui vient du filtre. Nous subdivisons ce masque en plus petits morceaux et calculons simplement le nombre de pixels qu'il y a dans chaque morceau. Si le nombre de pixels est supérieur à la tolérance dans au moins un des morceaux on dit que l'image contient la bouteille orange.
-En plus d'être très rapide, cette méthode est précise et les faux positifs sont très rare.
+En plus d'être très rapide, cette méthode est précise et les faux positifs sont très rares.
 
-  
+
 # Challenge 3
 
 Le challenge 3 est dans la continuité du challenge 2. A l'issu de ce challenge, le robot doit être capable de mettre dans un repère un marqueur des bouteilles présentes dans l'arène, et de reconnaître une bouteille déjà relevée dans le repère. 
