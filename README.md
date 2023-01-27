@@ -1,6 +1,7 @@
 # UV LARM Groupe 7 Mother
 
 Ce git est issu d'un projet de cours de Logiciels et applications pour la robotique mobile à l'IMT NORD EUROPE. 
+
 # Le repertoire LARM_MOTHER
 
 Le repertoire Larm_mother permet de au robot Kobuki de se déplacer dans une pièce. Grâce aux différents fichiers, vous pourrez executer un déplacement autonome du robot, scaner d'une pièce, établir une carte d'une pièce et reconnaître divers objets dans son environnement. 
@@ -68,7 +69,7 @@ L'objectif de ce challenge est de faire en sorte que le robot puisse faire une c
 
 ## Attention
 
-Pour le moment, le robot n'est capable de détecter que les bouteilles orange. La méthode basée de détection basée sur la couleur de la bouteille ne fonctionne pas avec les bouteilles noires, le noir n'étant pas une couleur.
+Pour le moment, le robot n'est capable de détecter que les bouteilles oranges. La méthode de détection basée sur la couleur de la bouteille ne fonctionne pas avec les bouteilles noires, le noir n'étant pas une couleur.
 
 ## Comment exécuter la simulation du challenge-2
 
